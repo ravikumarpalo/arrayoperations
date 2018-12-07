@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl" style="margin-top: 100px;">
+	<center>
+		<h1>Array Operations</h1>
+		<br>
+		<div class="form-group form-inline">
+    		<label for="length">Enter Size:</label>
+			<input type="number" class="form-control" ng-model="arrlength" id="length" style="width:25%;" placeholder="Enter size">
+  		</div>
+  		<br>
+		<div class="form-group form-inline">
+    		<label for="selecttype">Select Datatype:</label>
+			<select ng-model="datatype" ng-change="clear()" id="selecttype" class="form-control" style="width: 25%;">
+				<option ng-repeat="x in types" value="{{x}}">{{x}}</option>
+			</select>
+		</div>
+		<br>
+		<div class="form-group form-inline">
+    		<label for="inputdata">Enter Data:</label>
+			<input type="text" class="form-control" ng-model="inputdata" id="inputdata" style="width:30%;" placeholder="Enter elements in Array">
+  		</div>
+		<br>
+		<a class="btn btn-primary" ng-click="insert(0)">Insert First</a>
+		<a class="btn btn-primary" ng-click="insert(1)">Insert Middle</a>
+		<a class="btn btn-primary" ng-click="insert(2)">Insert Last</a>
+		<br><br>
+		<a class="btn btn-primary" ng-click="delete(0)">Delete First</a>
+		<a class="btn btn-primary" ng-click="delete(1)">Delete Middle</a>
+		<a class="btn btn-primary" ng-click="delete(2)">Delete Last</a>
+		<br><br>
+		<a class="btn btn-primary" ng-click="sort()">Sort</a>
+		<a class="btn btn-primary" ng-click="min()">Minimum</a>
+		<a class="btn btn-primary" ng-click="max()">Maximum</a>
+		<a class="btn btn-primary" ng-click="length()">Length</a>
+		<br><br>
+		{{data}}
+	</center>
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.data = []
+    $scope.types = [
+    	"Integer","Float","Double","Character"
+    ]
+    $scope.arrlength = 0;
+    $scope.inputdata = ""
+    $scope.datatype = $scope.types[0]
+    $scope.insert = function(id){
+    	if($scope.data.length >= parseInt($scope.arrlength)){
+    		if(confirm('Array is full!!!. Do you want to increase size by 5??')){
+    			$scope.arrlength = $scope.arrlength + 5;
+    		}
+    	}
+    	else{
+	    	if(isValid()){
+	    		if($scope.datatype != "Character"){
+	    			$scope.inputdata = Number($scope.inputdata)
+	    		}
+	    		if(id == 2)
+	    			$scope.data.push($scope.inputdata)
+	    		else if(id == 0)
+	    			$scope.data.splice(0,0,$scope.inputdata)
+	    		else
+	    			$scope.data.splice(($scope.data.length) / 2,0,$scope.inputdata)
+	    	}
+	    	else{
+	    		alert("Enter Vaild Data")
+	    	}
+	    	$scope.inputdata = ""
+	    }
+    }
+    $scope.delete = function(id){
+    	if(id == 0){
+    		$scope.data.splice(0, 1)
+    	}
+    	if(id == 2){
+    		$scope.data.splice($scope.data.length - 1, 1)
+    	}
+    }
+    $scope.clear = function(){
+    	$scope.data = [];
+    }
+    $scope.sort = function(){
+    	if($scope.datatype == "Character")
+    		$scope.data.sort();
+    	else
+    		$scope.data.sort((a,b) => a-b);
+    }
+    $scope.min = function(){
+    	var min = $scope.data[0];
+		for (var k = 1; k < $scope.data.length; k++) {
+		  if ($scope.data[k] < min) {
+		    min = $scope.data[k];
+		  }
+		}
+		alert("Minimum value of the array is: " + min)
+    }
+    $scope.max = function(){
+    	var max = $scope.data[0];
+		for (var k = 1; k < $scope.data.length; k++) {
+		  if ($scope.data[k] > max) {
+		    max = $scope.data[k];
+		  }
+		}
+		alert("Maximum value of the array is: " + max)
+    }
+    $scope.length = function(){
+    	alert('Length of the array is: ' + $scope.data.length)
+    }
+    function isValid(){
+    	if($scope.datatype == "Integer"){
+	    	if($scope.inputdata.match(/^-{0,1}\d+$/)){
+	  			return true
+			}
+			else{
+				return false
+			}
+		}
+		else if($scope.datatype == "Float" || $scope.datatype == "Double"){
+	    	if($scope.inputdata.match(/^-{0,1}\d+.?\d+$/)){
+	  			return true
+			}
+			else{
+				return false
+			}
+		}
+		else{
+			return true
+		}
+    }
+});
+</script>
+
+</body>
+</html>
+
